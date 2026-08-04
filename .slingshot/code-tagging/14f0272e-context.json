@@ -1,0 +1,15 @@
+{
+  "filename": "App.jsx",
+  "path": "frontend\\src\\App.jsx",
+  "version": "1.1",
+  "files": {},
+  "promptMessage": {
+    "59d28a19": {
+      "value": ">java -version\nopenjdk version \"17.0.19\" 2026-04-21 LTS\nOpenJDK Runtime Environment Microsoft-13877129 (build 17.0.19+10-LTS)\nOpenJDK 64-Bit Server VM Microsoft-13877129 (build 17.0.19+10-LTS, mixed mode, sharing)"
+    }
+  },
+  "localPrompts": {},
+  "remotePrompts": {},
+  "figma": {},
+  "jira": {}
+}

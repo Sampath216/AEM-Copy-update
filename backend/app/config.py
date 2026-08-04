@@ -1,0 +1,5 @@
+UPLOAD_FOLDER = "uploads"
+REPORT_FOLDER = "reports"
+LOG_FOLDER = "logs"
+
+MAX_FILE_SIZE = 10
