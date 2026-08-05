@@ -11,6 +11,7 @@ from app.routes import mock_update
 from app.routes import update_preview
 from app.routes import execute_update
 from app.routes import seo_update
+from app.routes import component_update
 
 
 app = FastAPI(
@@ -73,6 +74,12 @@ app.include_router(
     seo_update.router,
     prefix="/seo-update",
     tags=["SEO Update"]
+)
+
+app.include_router(
+    component_update.router,
+    prefix="/component-update",
+    tags=["Component Update"]
 )
 
 @app.get("/")

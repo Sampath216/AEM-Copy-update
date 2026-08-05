@@ -5,44 +5,48 @@ AEM_HOST = "http://localhost:8080"
 AEM_USER = "admin"
 AEM_PASSWORD = "admin"
 
+# Mapping: What CA sees → Real AEM property
+SEO_FIELD_MAPPING = {
+    "Meta Title": "jcr:title",
+    "Meta Description": "jcr:description",
+    "Page Title": "pageTitle",
+    "Canonical URL": "cq:canonicalUrl"
+}
+
 
 def update_seo_properties(row):
     """
-    Updates SEO / Page properties on jcr:content node
+    CA-Friendly SEO property update
     """
 
-    page_path = row.get("Page Properties Path")
+    page_path = row.get("Page Path")
 
     if not page_path:
         return {
             "status": "failed",
-            "message": "Missing Page Properties Path",
+            "message": "Missing Page Path",
             "row": row
         }
 
-    # Properties we want to update
+    # Automatically add /jcr:content
+    target_path = f"{page_path.rstrip('/')}/jcr:content"
+
+    # Build properties using mapping
     properties = {}
 
-    if row.get("jcr:title"):
-        properties["jcr:title"] = row["jcr:title"]
-
-    if row.get("jcr:description"):
-        properties["jcr:description"] = row["jcr:description"]
-
-    if row.get("pageTitle"):
-        properties["pageTitle"] = row["pageTitle"]
-
-    if row.get("cq:canonicalUrl"):
-        properties["cq:canonicalUrl"] = row["cq:canonicalUrl"]
+    for ca_field, aem_property in SEO_FIELD_MAPPING.items():
+        value = row.get(ca_field)
+        if value and str(value).strip() != "":
+            properties[aem_property] = str(value).strip()
 
     if not properties:
         return {
             "status": "failed",
-            "message": "No properties to update",
+            "message": "No valid SEO fields found to update",
             "row": row
         }
 
-    url = f"{AEM_HOST}{page_path}"
+    url = f"{AEM_HOST}{target_path}"
 
     try:
         response = requests.post(
@@ -55,8 +59,8 @@ def update_seo_properties(row):
         if response.status_code in [200, 201]:
             return {
                 "status": "success",
-                "message": f"Updated SEO properties on {page_path}",
-                "updated_properties": list(properties.keys()),
+                "message": f"Updated SEO properties on {target_path}",
+                "updated_fields": list(properties.keys()),
                 "aem_status_code": response.status_code
             }
         else:
