@@ -10,6 +10,7 @@ from app.routes import payload_preview
 from app.routes import mock_update
 from app.routes import update_preview
 from app.routes import execute_update
+from app.routes import seo_update
 
 
 app = FastAPI(
@@ -66,6 +67,12 @@ app.include_router(
     execute_update.router,
     prefix="/execute-update",
     tags=["Execute Update"]
+)
+
+app.include_router(
+    seo_update.router,
+    prefix="/seo-update",
+    tags=["SEO Update"]
 )
 
 @app.get("/")
